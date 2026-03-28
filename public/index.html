@@ -1,25 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Geoscope</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+  <!-- 🎥 VIDEO BACKGROUND -->
   <video autoplay muted loop id="bg-video">
-    <source src="videos/bg.mp4" type="video/mp4">
+    <source src="videos/globe.mp4" type="video/mp4">
   </video>
 
+  <!-- 🌍 CONTENT -->
   <div class="container">
-    <h1>🌍 Geoscope</h1>
-    <div class="globe"></div>
-    <p>AI HVAC Detection Platform</p>
+    <h1 class="title">GEOSCOPE</h1>
+    <p class="subtitle">AI HVAC Detection System</p>
 
     <button id="loginBtn">Sign in with Google</button>
+
     <div id="userInfo"></div>
   </div>
 
+  <!-- 🔐 FIREBASE -->
   <script type="module" src="script.js"></script>
 
 </body>
