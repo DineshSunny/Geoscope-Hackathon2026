@@ -1,3 +1,4 @@
+/* GLOBAL */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -12,7 +13,7 @@ body {
   text-align: center;
 }
 
-/* 🎥 VIDEO BACKGROUND */
+/* 🎥 BACKGROUND VIDEO */
 #bg-video {
   position: fixed;
   top: 0;
@@ -20,17 +21,20 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.35; /* adjust brightness */
+
+  opacity: 0.65; /* balanced brightness */
+  filter: brightness(1.3) contrast(1.2);
+
   z-index: -2;
 }
 
-/* DARK OVERLAY */
+/* DARK OVERLAY (LIGHTER NOW) */
 body::after {
   content: "";
   position: fixed;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(0,0,0,0.6), black);
+  background: radial-gradient(circle, rgba(0,0,0,0.3), rgba(0,0,0,0.85));
   z-index: -1;
 }
 
@@ -44,7 +48,9 @@ body::after {
 /* TITLE */
 .title {
   font-size: 80px;
-  letter-spacing: 5px;
+  letter-spacing: 6px;
+  margin: 0;
+
   text-shadow:
     0 0 10px white,
     0 0 30px white,
@@ -54,7 +60,7 @@ body::after {
 /* SUBTITLE */
 .subtitle {
   font-size: 18px;
-  opacity: 0.7;
+  opacity: 0.75;
   margin-bottom: 30px;
 }
 
@@ -68,16 +74,31 @@ button {
   border-radius: 8px;
   cursor: pointer;
 
-  box-shadow: 0 0 15px white;
+  box-shadow:
+    0 0 10px white,
+    0 0 20px rgba(255,255,255,0.3);
+
+  transition: all 0.3s ease;
 }
 
 button:hover {
   background: white;
   color: black;
-  box-shadow: 0 0 30px white;
+
+  box-shadow:
+    0 0 20px white,
+    0 0 40px white;
 }
 
 /* USER INFO */
 #userInfo {
   margin-top: 20px;
+}
+
+/* OPTIONAL GLOW TEXT EFFECT */
+.glow {
+  text-shadow:
+    0 0 5px white,
+    0 0 15px white,
+    0 0 30px white;
 }
