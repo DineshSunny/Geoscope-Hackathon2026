@@ -14,17 +14,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
-// 🔥 GOOGLE PROVIDER
 const provider = new GoogleAuthProvider();
 
-// 🔥 FORCE ACCOUNT SELECTION EVERY TIME
-const provider = new GoogleAuthProvider();
-
-// 🔥 FORCE FULL RE-AUTH
-provider.setCustomParameters({
-  prompt: "select_account consent"
-});
 document.addEventListener("DOMContentLoaded", () => {
 
   const loginBtn = document.getElementById("loginBtn");
@@ -37,13 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // ✅ Save user locally
+      // ✅ Save user
       localStorage.setItem("user", JSON.stringify({
         name: user.displayName,
         email: user.email
       }));
 
-      // 🚀 Redirect
+      // ✅ Redirect
       window.location.href = "/app.html";
 
     } catch (error) {

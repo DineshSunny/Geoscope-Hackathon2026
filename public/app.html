@@ -37,23 +37,30 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // 🔐 Get user
-    const user = JSON.parse(localStorage.getItem("user"));
+    // 🔐 Get user safely
+    const userData = localStorage.getItem("user");
 
-    // 🚫 Protect page
-    if (!user) {
+    if (!userData) {
       window.location.href = "/login.html";
     } else {
+      const user = JSON.parse(userData);
+
+      // 👋 Show welcome
       document.getElementById("welcome").innerText =
-        "Welcome, " + user.name;
+        "Welcome, " + (user.name || "User");
     }
 
-    // 🔓 FULL LOGOUT (Firebase + local)
-    document.getElementById("logoutBtn").onclick = async () => {
-      await signOut(auth); // 🔥 THIS FIXES YOUR ISSUE
-      localStorage.removeItem("user");
+    // 🔓 Logout (FULL RESET)
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      try {
+        await signOut(auth); // Firebase logout
+      } catch (e) {
+        console.log("Firebase signOut skipped");
+      }
+
+      localStorage.removeItem("user"); // local logout
       window.location.href = "/index.html";
-    };
+    });
   </script>
 
 </body>
