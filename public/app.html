@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoscope App</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+  <!-- 🎥 BACKGROUND VIDEO -->
+  <video autoplay muted loop id="bg-video">
+    <source src="/videos/globe.mp4" type="video/mp4">
+  </video>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <h1 id="welcome">Loading...</h1>
+    <p class="subtitle">Access Granted</p>
+
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    // 🔐 Protect page
+    if (!user) {
+      window.location.href = "/login.html";
+    }
+
+    // 👋 Show welcome
+    document.getElementById("welcome").innerText =
+      "Welcome, " + user.name;
+
+    // 🔓 Logout
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "/login.html";
+    }
+  </script>
+
+</body>
+</html>
