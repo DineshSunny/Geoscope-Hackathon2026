@@ -1,14 +1,23 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const fs = require('fs').promises;
 const path = require('path');
-const Anthropic = require('@anthropic-ai/sdk');
+const { Ollama } = require('ollama');
 
 // ── Config ───────────────────────────────────────────────
-const RF_API_KEY   = 'a94Bq3PLxRhifix6Opq0';   // your key
+const RF_API_KEY   = process.env.RF_API_KEY;
 const PORT         = 3000;
-const anthropic = new Anthropic({ apiKey: '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' });
+const OLLAMA_MODEL = 'llama3.2';
+const ollama       = new Ollama({ host: 'http://127.0.0.1:11434' });
+
+// Validate required env vars on startup
+if (!process.env.RF_API_KEY) {
+    console.error('ERROR: RF_API_KEY is not set in your .env file');
+    process.exit(1);
+}
 
 // Map detection types to Roboflow model IDs
 const MODEL_MAP = {
@@ -119,7 +128,7 @@ app.post('/detect', async (req, res) => {
     }
 });
 
-// ── KELLY CHAT (Claude) ──────────────────────────────────
+// ── KELLY CHAT (Ollama) ──────────────────────────────────
 app.post('/chat', async (req, res) => {
     const { message, context } = req.body;
 
@@ -140,19 +149,20 @@ If the user asks about detection counts, you can answer based on the context.
 Keep responses concise and friendly.`;
 
     try {
-        const response = await anthropic.messages.create({
-            model: 'claude-haiku-4-5-20251001',      // Most affordable model
-            max_tokens: 300,
-            temperature: 0.7,
-            system: systemPrompt,
-            messages: [{ role: 'user', content: message }]
+        const response = await ollama.chat({
+            model: OLLAMA_MODEL,
+            options: { temperature: 0.7, num_predict: 300 },
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: message }
+            ]
         });
 
-        const reply = response.content[0].text;
+        const reply = response.message.content;
         res.json({ reply });
     } catch (err) {
-        console.error('Claude error:', err);
-        res.status(500).json({ error: 'AI service unavailable' });
+        console.error('Ollama error:', err);
+        res.status(500).json({ error: 'AI service unavailable. Is Ollama running? Try: ollama serve' });
     }
 });
 
@@ -167,4 +177,6 @@ app.use(express.static(BASE_DIR));
 // ── RUN ──────────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Using Ollama model: ${OLLAMA_MODEL}`);
+    console.log(`Make sure Ollama is running: ollama serve`);
 });
