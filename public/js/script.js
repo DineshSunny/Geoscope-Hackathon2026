@@ -2,7 +2,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import {
   getAuth,
   signInWithPopup,
-  GoogleAuthProvider
+  GoogleAuthProvider,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -14,7 +15,31 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+// 🔥 Google provider
 const provider = new GoogleAuthProvider();
+provider.setCustomParameters({
+  prompt: "select_account"
+});
+
+// 📍 LOCATION FUNCTION (THIS TRIGGERS POPUP)
+function requestLocation() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject("Geolocation not supported");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve(position.coords);
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -23,22 +48,35 @@ document.addEventListener("DOMContentLoaded", () => {
   loginBtn.onclick = async () => {
     try {
       loginBtn.disabled = true;
+      loginBtn.innerText = "Checking location...";
+
+      // 🔥 STEP 1: ASK LOCATION PERMISSION
+      await requestLocation(); // <-- THIS SHOWS "ALLOW LOCATION" POPUP
+
       loginBtn.innerText = "Signing in...";
 
+      // 🔥 STEP 2: RESET SESSION (clean login)
+      try {
+        await signOut(auth);
+      } catch (e) {}
+
+      // 🔐 STEP 3: GOOGLE LOGIN
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // ✅ Save user
+      // ✅ SAVE USER
       localStorage.setItem("user", JSON.stringify({
         name: user.displayName,
         email: user.email
       }));
 
-      // ✅ Redirect
+      // 🚀 REDIRECT
       window.location.href = "/app.html";
 
     } catch (error) {
       console.error("Login error:", error);
+
+      alert("Location access is required to continue");
 
       loginBtn.disabled = false;
       loginBtn.innerText = "Sign in with Google";
