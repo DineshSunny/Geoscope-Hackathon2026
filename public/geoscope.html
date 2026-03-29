@@ -900,7 +900,7 @@ async function onSaveCapture() {
 
     const imageDataURL = combinedCanvas.toDataURL("image/jpeg", 0.92);
 
-    const resp = await fetch('http://localhost:3000/save', {
+    const resp = await fetch('/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: imageDataURL })
