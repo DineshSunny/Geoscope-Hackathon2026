@@ -19,28 +19,41 @@
     <h1 id="welcome">Loading...</h1>
     <p class="subtitle">Access Granted</p>
 
-    <button onclick="logout()">Logout</button>
+    <button id="logoutBtn">Logout</button>
   </div>
 
   <!-- SCRIPT -->
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHBuDVBkzxDjT1A1LUpmj6sGumu3VYI6w",
+      authDomain: "geoscope-4d307.firebaseapp.com",
+      projectId: "geoscope-4d307",
+      appId: "1:339709550664:web:f82c7fb2a03f3e5c88787d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
     // 🔐 Get user
     const user = JSON.parse(localStorage.getItem("user"));
 
-    // 🚫 If not logged in → go to login
+    // 🚫 Protect page
     if (!user) {
       window.location.href = "/login.html";
     } else {
-      // 👋 Show welcome
       document.getElementById("welcome").innerText =
         "Welcome, " + user.name;
     }
 
-    // 🔓 Logout → go to INDEX (as you wanted)
-    function logout() {
+    // 🔓 FULL LOGOUT (Firebase + local)
+    document.getElementById("logoutBtn").onclick = async () => {
+      await signOut(auth); // 🔥 THIS FIXES YOUR ISSUE
       localStorage.removeItem("user");
       window.location.href = "/index.html";
-    }
+    };
   </script>
 
 </body>
