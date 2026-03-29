@@ -7,13 +7,15 @@
 
   <meta http-equiv="Cache-Control" content="no-store" />
   
-  <link rel="stylesheet" href="style.css">
+  <!-- ✅ FIXED CSS PATH -->
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
+  <!-- ✅ FIXED VIDEO PATH -->
   <video autoplay muted loop playsinline id="bg-video">
-    <source src="videos/hacker.mp4" type="video/mp4">
+    <source src="/videos/hacker.mp4" type="video/mp4">
   </video>
 
   <div class="container">
@@ -23,7 +25,8 @@
     <button id="loginBtn">Sign in with Google</button>
   </div>
 
-  <script type="module" src="./script.js"></script>
+  <!-- ✅ FIXED JS PATH -->
+  <script type="module" src="/js/script.js"></script>
 
   <script>
     if (performance.getEntriesByType("navigation")[0]?.type === "reload") {

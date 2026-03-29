@@ -1,55 +1,56 @@
-/* GLOBAL */
-body {
+/* RESET */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
   font-family: Arial, sans-serif;
-  background: black;
   color: white;
   height: 100vh;
   overflow: hidden;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 
-/* 🎥 BACKGROUND VIDEO */
+/* 🎥 FULLSCREEN VIDEO */
 #bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+
+  z-index: -2;
+}
+
+/* DARK OVERLAY */
+body::after {
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-
-  opacity: 0.65; /* balanced brightness */
-  filter: brightness(1.3) contrast(1.2);
-
-  z-index: -2;
-}
-
-/* DARK OVERLAY (LIGHTER NOW) */
-body::after {
-  content: "";
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(0,0,0,0.3), rgba(0,0,0,0.85));
+  background: rgba(0, 0, 0, 0.5);
   z-index: -1;
 }
 
-/* CONTAINER */
+/* 🔥 PERFECT CENTER FIX */
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: fixed;   /* 🔥 THIS FIXES YOUR ISSUE */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  text-align: center;
 }
 
 /* TITLE */
 .title {
-  font-size: 80px;
-  letter-spacing: 6px;
-  margin: 0;
+  font-size: 64px;
+  letter-spacing: 4px;
 
   text-shadow:
     0 0 10px white,
@@ -59,46 +60,27 @@ body::after {
 
 /* SUBTITLE */
 .subtitle {
-  font-size: 18px;
-  opacity: 0.75;
+  margin-top: 10px;
   margin-bottom: 30px;
+  opacity: 0.8;
 }
 
 /* BUTTON */
 button {
-  padding: 15px 35px;
-  font-size: 18px;
+  padding: 12px 28px;
+  font-size: 16px;
+
   background: black;
   color: white;
   border: 1px solid white;
-  border-radius: 8px;
+  border-radius: 6px;
+
   cursor: pointer;
 
-  box-shadow:
-    0 0 10px white,
-    0 0 20px rgba(255,255,255,0.3);
-
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 button:hover {
   background: white;
   color: black;
-
-  box-shadow:
-    0 0 20px white,
-    0 0 40px white;
-}
-
-/* USER INFO */
-#userInfo {
-  margin-top: 20px;
-}
-
-/* OPTIONAL GLOW TEXT EFFECT */
-.glow {
-  text-shadow:
-    0 0 5px white,
-    0 0 15px white,
-    0 0 30px white;
 }

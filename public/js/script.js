@@ -2,9 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import {
   getAuth,
   signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signOut
+  GoogleAuthProvider
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -22,42 +20,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loginBtn = document.getElementById("loginBtn");
 
-  // 🔥 CLEAN STATE CHECK
-  onAuthStateChanged(auth, async (user) => {
+  // 🔐 LOGIN ONLY (NO LOOPS)
+  loginBtn.onclick = async () => {
+    try {
+      loginBtn.disabled = true;
+      loginBtn.innerText = "Signing in...";
 
-    if (user) {
-      console.log("Existing session found → logging out");
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-      await signOut(auth); // reset session
-      return;
+      // ✅ Save user locally
+      localStorage.setItem("user", JSON.stringify({
+        name: user.displayName,
+        email: user.email
+      }));
+
+      // 🚀 Redirect ONCE
+      window.location.href = "/app.html";
+
+    } catch (error) {
+      console.error("Login error:", error);
+
+      loginBtn.disabled = false;
+      loginBtn.innerText = "Sign in with Google";
     }
-
-    // 🔐 LOGIN HANDLER
-    loginBtn.onclick = async () => {
-      try {
-        loginBtn.disabled = true;
-        loginBtn.innerText = "Signing in...";
-
-        const result = await signInWithPopup(auth, provider);
-        const loggedUser = result.user;
-
-        // ✅ SAVE USER
-        localStorage.setItem("user", JSON.stringify({
-          name: loggedUser.displayName,
-          email: loggedUser.email
-        }));
-
-        // 🚀 REDIRECT TO APP
-        window.location.href = "/app.html";
-
-      } catch (error) {
-        console.error("Login error:", error);
-
-        loginBtn.disabled = false;
-        loginBtn.innerText = "Sign in with Google";
-      }
-    };
-
-  });
+  };
 
 });
