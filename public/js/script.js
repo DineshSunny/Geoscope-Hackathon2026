@@ -14,13 +14,19 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+// 🔥 GOOGLE PROVIDER
 const provider = new GoogleAuthProvider();
+
+// 🔥 FORCE ACCOUNT SELECTION EVERY TIME
+provider.setCustomParameters({
+  prompt: "select_account"
+});
 
 document.addEventListener("DOMContentLoaded", () => {
 
   const loginBtn = document.getElementById("loginBtn");
 
-  // 🔐 LOGIN ONLY (NO LOOPS)
   loginBtn.onclick = async () => {
     try {
       loginBtn.disabled = true;
@@ -35,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         email: user.email
       }));
 
-      // 🚀 Redirect ONCE
+      // 🚀 Redirect
       window.location.href = "/app.html";
 
     } catch (error) {
