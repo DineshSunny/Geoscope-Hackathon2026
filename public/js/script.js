@@ -21,25 +21,18 @@ const provider = new GoogleAuthProvider();
 document.addEventListener("DOMContentLoaded", () => {
 
   const loginBtn = document.getElementById("loginBtn");
-  const userInfo = document.getElementById("userInfo");
 
-  // 🔥 CHECK & LOGOUT ONCE (SAFE)
+  // 🔥 CLEAN STATE CHECK
   onAuthStateChanged(auth, async (user) => {
 
     if (user) {
       console.log("Existing session found → logging out");
 
-      await signOut(auth); // 🔥 clean reset
-
-      loginBtn.style.display = "block";
-      loginBtn.disabled = false;
-      loginBtn.innerText = "Sign in with Google";
-      userInfo.innerHTML = "";
-
-      return; // stop here after logout
+      await signOut(auth); // reset session
+      return;
     }
 
-    // 🔐 LOGIN (ONLY AFTER CLEAN STATE)
+    // 🔐 LOGIN HANDLER
     loginBtn.onclick = async () => {
       try {
         loginBtn.disabled = true;
@@ -48,17 +41,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await signInWithPopup(auth, provider);
         const loggedUser = result.user;
 
-        loginBtn.style.display = "none";
+        // ✅ SAVE USER
+        localStorage.setItem("user", JSON.stringify({
+          name: loggedUser.displayName,
+          email: loggedUser.email
+        }));
 
-        userInfo.innerHTML = `
-          <p>Welcome, ${loggedUser.displayName}</p>
-          <button id="logoutBtn">Logout</button>
-        `;
-
-        document.getElementById("logoutBtn").onclick = async () => {
-          await signOut(auth);
-          window.location.href = "/index.html";
-        };
+        // 🚀 REDIRECT TO APP
+        window.location.href = "/app.html";
 
       } catch (error) {
         console.error("Login error:", error);
