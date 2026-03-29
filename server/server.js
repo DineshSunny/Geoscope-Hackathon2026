@@ -14,8 +14,8 @@ app.use(express.static(path.join(__dirname, "../public")));
 
 app.get("/test", (req, res) => {
   res.send("Server working ✅");
-});
+  });
 
-app.listen(3001, () => {
-  console.log("Server running on port 3001");
-});
+  app.listen(3001, () => {
+    console.log("Server running on port 3001");
+    });
