@@ -24,21 +24,22 @@
 
   <!-- SCRIPT -->
   <script>
+    // 🔐 Get user
     const user = JSON.parse(localStorage.getItem("user"));
 
-    // 🔐 Protect page
+    // 🚫 If not logged in → go to login
     if (!user) {
       window.location.href = "/login.html";
+    } else {
+      // 👋 Show welcome
+      document.getElementById("welcome").innerText =
+        "Welcome, " + user.name;
     }
 
-    // 👋 Show welcome
-    document.getElementById("welcome").innerText =
-      "Welcome, " + user.name;
-
-    // 🔓 Logout
+    // 🔓 Logout → go to INDEX (as you wanted)
     function logout() {
       localStorage.removeItem("user");
-      window.location.href = "/login.html";
+      window.location.href = "/index.html";
     }
   </script>
 
