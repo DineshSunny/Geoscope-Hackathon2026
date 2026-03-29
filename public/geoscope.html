@@ -730,7 +730,7 @@ async function onDetectCurrentMap(type) {   // type = 'building' or 'hvac'
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
-    const saveResp = await fetch('https://geoscope-backend.onrender.com/save', {
+    const saveResp = await fetch('https://geoscope-hackathon2026.onrender.com/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: dataURL })
@@ -740,7 +740,7 @@ async function onDetectCurrentMap(type) {   // type = 'building' or 'hvac'
     const savedPath = saveData.saved;
 
     setStatus(`Detecting ${type === 'building' ? 'buildings' : 'HVACs'}…`, "warn");
-    const detectResp = await fetch('https://geoscope-backend.onrender.com/detect' , {
+    const detectResp = await fetch('https://geoscope-hackathon2026.onrender.com/detect', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ path: savedPath, type: type })
@@ -900,7 +900,7 @@ async function onSaveCapture() {
 
     const imageDataURL = combinedCanvas.toDataURL("image/jpeg", 0.92);
 
-    const resp = await fetch('https://geoscope-backend.onrender.com/save' , {
+    const resp = await fetch('https://geoscope-hackathon2026.onrender.com/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: imageDataURL })
@@ -977,7 +977,7 @@ async function sendToKelly() {
             modelId: currentType === 'building' ? 'geoscope-v2/1' : (currentType === 'hvac' ? 'hvac-detection-ujree/1' : 'None')
         };
 
-        const resp = await fetch('https://YOUR-ACTUAL-BACKEND.onrender.com/chat', {
+        const resp = await fetch('https://geoscope-hackathon2026.onrender.com/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message, context })
