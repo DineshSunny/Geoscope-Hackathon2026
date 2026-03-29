@@ -150,7 +150,7 @@ ${insight}
 `;
 }
 
-// ── ABBY CHAT (Ollama) ──────────────────────────────────
+// ── ABBY CHAT ──────────────────────────────────
 app.post('/chat', async (req, res) => {
     const { message, context } = req.body;
 
@@ -158,33 +158,28 @@ app.post('/chat', async (req, res) => {
         return res.status(400).json({ error: 'No message provided' });
     }
 
-    const systemPrompt = `You are Abby, a helpful assistant for the GeoScope map viewer.
-Current map context:
-- Center: lat ${context.lat}, lon ${context.lon}
-- Zoom: ${context.zoom}
-- Last detection: ${context.detectionType} (${context.detectionCount} objects, avg confidence ${context.avgConfidence}%)
-- Model used: ${context.modelId}
-
-You can help the user navigate to cities, explain the map, and give details about detections. 
-If the user asks to go to a city or location, respond with a special command: "NAVIGATE:city_name".
-If the user asks about detection counts, you can answer based on the context.
-Keep responses concise and friendly.`;
-
     try {
-        const response = await ollama.chat({
-            model: OLLAMA_MODEL,
-            options: { temperature: 0.7, num_predict: 300 },
-            messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: message }
-            ]
-        });
+        let reply = "";
 
-        const reply = response.message.content;
+        if (message.toLowerCase().includes("analyze")) {
+            reply = "Hi, I'm Abby 👋\n\n" + analyzeDetections(context);
+        }
+        else if (message.toLowerCase().includes("efficient")) {
+            reply = context.avgConfidence > 70
+                ? "I'm Abby — this building appears energy efficient."
+                : "I'm Abby — this building may not be energy efficient.";
+        }
+        else if (message.toLowerCase().includes("how many")) {
+            reply = `I'm Abby — there are ${context.detectionCount} detected objects.`;
+        }
+        else {
+            reply = "Hi, I'm Abby! I can analyze buildings, HVAC systems, and map data.";
+        }
+
         res.json({ reply });
+
     } catch (err) {
-        console.error('Ollama error:', err);
-        res.status(500).json({ error: 'AI service unavailable. Is Ollama running? Try: ollama serve' });
+        res.status(500).json({ error: err.message });
     }
 });
 

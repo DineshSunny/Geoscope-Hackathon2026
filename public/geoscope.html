@@ -754,6 +754,45 @@ async function onDetectCurrentMap(type) {   // type = 'building' or 'hvac'
     currentPredictions = predictions;
     currentType = type;
 
+
+    // ======================
+// 🧠 ABBY AI (CORRECT SPOT)
+// ======================
+const avgConf = predictions.length
+  ? Math.round(
+      (predictions.reduce((s, p) => s + (p.confidence || 0), 0) / predictions.length) * 100
+    )
+  : 0;
+
+const aiResp = await fetch('https://geoscope-hackathon2026.onrender.com/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message: "Analyze this building",
+    context: {
+      detectionCount: predictions.length,
+      avgConfidence: avgConf
+    }
+  })
+});
+
+const aiData = await aiResp.json();
+
+// show Abby result
+setStatus(aiData.reply, "info");
+
+// 🔊 Abby voice
+const voiceResp = await fetch('https://geoscope-hackathon2026.onrender.com/voice', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ 
+    text: "Hi, I'm Abby. " + aiData.reply 
+  })
+});
+
+const audioBlob = await voiceResp.blob();
+new Audio(URL.createObjectURL(audioBlob)).play();
+
     if (currentPredictions.length === 0) {
       setStatus(`⚠ No ${type === 'building' ? 'buildings' : 'HVACs'} detected`, "warn");
       clearOverlay();
