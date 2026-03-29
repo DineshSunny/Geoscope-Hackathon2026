@@ -801,7 +801,7 @@ new Audio(URL.createObjectURL(audioBlob)).play();
       const palette = COLOR_PALETTES[type] || DEFAULT_PALETTE;
       drawOverlay(currentPredictions, result.image_width, result.image_height, palette);
       const avgConf = (currentPredictions.reduce((s, p) => s + (p.confidence || 0), 0) / currentPredictions.length * 100).toFixed(1);
-      setStatus(`✓ ${currentPredictions.length} ${type === 'building' ? 'building(s)' : 'HVAC(s)'} detected (avg ${avgConf}%)`, "success");
+      setStatus(`✓ ${currentPredictions.length} ${type === 'building' ? 'building(s)' : 'HVAC(s)'} detected (avg ${avgConfDisplay}%)`, "success");
       showCaptureButton(true);
     }
   } catch (e) {
