@@ -19,10 +19,12 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 // 🔥 FORCE ACCOUNT SELECTION EVERY TIME
-provider.setCustomParameters({
-  prompt: "select_account"
-});
+const provider = new GoogleAuthProvider();
 
+// 🔥 FORCE FULL RE-AUTH
+provider.setCustomParameters({
+  prompt: "select_account consent"
+});
 document.addEventListener("DOMContentLoaded", () => {
 
   const loginBtn = document.getElementById("loginBtn");
