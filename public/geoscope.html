@@ -900,7 +900,7 @@ async function onSaveCapture() {
 
     const imageDataURL = combinedCanvas.toDataURL("image/jpeg", 0.92);
 
-    const resp = await fetch('/save', {
+    const resp = await fetch('https://YOUR-RENDER-URL.onrender.com/save' , {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: imageDataURL })
@@ -977,7 +977,7 @@ async function sendToKelly() {
             modelId: currentType === 'building' ? 'geoscope-v2/1' : (currentType === 'hvac' ? 'hvac-detection-ujree/1' : 'None')
         };
 
-        const resp = await fetch('/chat', {
+        const resp = await fetch('https://YOUR-RENDER-URL.onrender.com/chat' , {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message, context })
