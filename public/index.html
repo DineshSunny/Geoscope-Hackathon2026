@@ -11,7 +11,7 @@
 <body>
 
   <!-- 🎥 VIDEO BACKGROUND -->
-  <video autoplay muted loop id="bg-video">
+  <video autoplay muted loop playsinline id="bg-video">
     <source src="videos/globe.mp4" type="video/mp4">
   </video>
 
@@ -20,13 +20,15 @@
     <h1 class="title">GEOSCOPE</h1>
     <p class="subtitle">AI HVAC Detection System</p>
 
+    <!-- LOGIN BUTTON -->
     <button id="loginBtn">Sign in with Google</button>
 
+    <!-- USER INFO -->
     <div id="userInfo"></div>
   </div>
 
   <!-- 🔐 FIREBASE -->
-  <script type="module" src="script.js"></script>
+  <script type="module" src="./script.js"></script>
 
 </body>
 </html>

@@ -3,7 +3,8 @@ import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -19,33 +20,60 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// 🔥 WAIT FOR PAGE LOAD
 document.addEventListener("DOMContentLoaded", () => {
 
   const loginBtn = document.getElementById("loginBtn");
+  const userInfo = document.getElementById("userInfo");
 
+  // 🔐 LOGIN
   if (loginBtn) {
-    loginBtn.addEventListener("click", async () => {
+    loginBtn.onclick = async () => {
       try {
         await signInWithPopup(auth, provider);
       } catch (error) {
         console.error("Login error:", error);
       }
-    });
+    };
   }
 
-  // AFTER LOGIN
+  // 🔄 AUTH STATE LISTENER
   onAuthStateChanged(auth, (user) => {
+
     if (user) {
-      document.getElementById("userInfo").innerHTML = `
+      console.log("User logged in:", user.displayName);
+
+      // 🔥 Hide login button
+      if (loginBtn) loginBtn.style.display = "none";
+
+      // Show user UI
+      userInfo.innerHTML = `
         <p>Welcome, ${user.displayName}</p>
         <button id="enterBtn">Enter App 🚀</button>
+        <button id="logoutBtn">Logout</button>
       `;
 
+      // Enter App
       document.getElementById("enterBtn").onclick = () => {
         window.location.href = "/app.html";
       };
+
+      // Logout
+      document.getElementById("logoutBtn").onclick = () => {
+        signOut(auth).then(() => {
+          console.log("Logged out");
+          location.reload();
+        });
+      };
+
+    } else {
+      console.log("No user logged in");
+
+      // 🔥 Show login button again
+      if (loginBtn) loginBtn.style.display = "block";
+
+      userInfo.innerHTML = "";
     }
+
   });
 
 });
