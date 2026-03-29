@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }));
 
       // 🚀 Redirect
-      window.location.href = "/app.html";
+      window.location.href = "/geoscope.html";
 
     } catch (error) {
       console.error("Login error:", error);
