@@ -465,9 +465,16 @@
 
 
 
-// 🔐 AUTH CHECK (ADDED)
+// 🔐 AUTH + REFRESH CONTROL
 const user = localStorage.getItem("user");
+
+// If not logged in → go to index
 if (!user) {
+  window.location.href = "/index.html";
+}
+
+// If page is refreshed → go back to index
+if (performance.navigation.type === 1) {
   window.location.href = "/index.html";
 }
 // ── State ──────────────────────────────────────────────────────────────────
