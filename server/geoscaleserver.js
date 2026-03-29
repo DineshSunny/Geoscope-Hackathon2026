@@ -7,10 +7,7 @@ const path = require('path');
 const { Ollama } = require('ollama');
 
 // ── Config ───────────────────────────────────────────────
-const RF_API_KEY   = process.env.RF_API_KEY;
-const PORT         = 3000;
-const OLLAMA_MODEL = 'llama3.2';
-const ollama       = new Ollama({ host: 'http://127.0.0.1:11434' });
+
 
 // Validate required env vars on startup
 if (!process.env.RF_API_KEY) {
@@ -127,7 +124,33 @@ app.post('/detect', async (req, res) => {
     }
 });
 
-// ── KELLY CHAT (Ollama) ──────────────────────────────────
+
+
+// ── SIMPLE AI ANALYSIS ─────────────────────────
+function analyzeDetections(context) {
+    const count = context.detectionCount || 0;
+    const avg = context.avgConfidence || 0;
+
+    let insight = "";
+
+    if (count === 0) {
+        insight = "No HVAC or building features detected.";
+    } else if (count < 5) {
+        insight = "This appears to be a small structure.";
+    } else if (count < 15) {
+        insight = "Moderate infrastructure detected, likely commercial.";
+    } else {
+        insight = "High infrastructure density detected, large facility.";
+    }
+
+    return `
+Detected ${count} objects.
+Average confidence: ${avg}%.
+${insight}
+`;
+}
+
+// ── ABBY CHAT (Ollama) ──────────────────────────────────
 app.post('/chat', async (req, res) => {
     const { message, context } = req.body;
 
@@ -135,7 +158,7 @@ app.post('/chat', async (req, res) => {
         return res.status(400).json({ error: 'No message provided' });
     }
 
-    const systemPrompt = `You are Kelly, a helpful assistant for the GeoScope map viewer.
+    const systemPrompt = `You are Abby, a helpful assistant for the GeoScope map viewer.
 Current map context:
 - Center: lat ${context.lat}, lon ${context.lon}
 - Zoom: ${context.zoom}
