@@ -3,10 +3,12 @@ const cors = require('cors');
 const axios = require('axios');
 const fs = require('fs').promises;
 const path = require('path');
+const Anthropic = require('@anthropic-ai/sdk');
 
 // ── Config ───────────────────────────────────────────────
 const RF_API_KEY   = 'a94Bq3PLxRhifix6Opq0';   // your key
 const PORT         = 3000;
+const anthropic = new Anthropic({ apiKey: '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' });
 
 // Map detection types to Roboflow model IDs
 const MODEL_MAP = {
@@ -114,6 +116,43 @@ app.post('/detect', async (req, res) => {
             });
         }
         res.status(500).json({ error: err.message });
+    }
+});
+
+// ── KELLY CHAT (Claude) ──────────────────────────────────
+app.post('/chat', async (req, res) => {
+    const { message, context } = req.body;
+
+    if (!message) {
+        return res.status(400).json({ error: 'No message provided' });
+    }
+
+    const systemPrompt = `You are Kelly, a helpful assistant for the GeoScope map viewer.
+Current map context:
+- Center: lat ${context.lat}, lon ${context.lon}
+- Zoom: ${context.zoom}
+- Last detection: ${context.detectionType} (${context.detectionCount} objects, avg confidence ${context.avgConfidence}%)
+- Model used: ${context.modelId}
+
+You can help the user navigate to cities, explain the map, and give details about detections. 
+If the user asks to go to a city or location, respond with a special command: "NAVIGATE:city_name".
+If the user asks about detection counts, you can answer based on the context.
+Keep responses concise and friendly.`;
+
+    try {
+        const response = await anthropic.messages.create({
+            model: 'claude-haiku-4-5-20251001',      // Most affordable model
+            max_tokens: 300,
+            temperature: 0.7,
+            system: systemPrompt,
+            messages: [{ role: 'user', content: message }]
+        });
+
+        const reply = response.content[0].text;
+        res.json({ reply });
+    } catch (err) {
+        console.error('Claude error:', err);
+        res.status(500).json({ error: 'AI service unavailable' });
     }
 });
 
