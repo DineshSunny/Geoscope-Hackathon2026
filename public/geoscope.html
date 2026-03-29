@@ -723,7 +723,7 @@ async function onDetectCurrentMap(type) {   // type = 'building' or 'hvac'
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
-    const saveResp = await fetch('http://localhost:3000/save', {
+    const saveResp = await fetch('http:/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: dataURL })
@@ -733,7 +733,7 @@ async function onDetectCurrentMap(type) {   // type = 'building' or 'hvac'
     const savedPath = saveData.saved;
 
     setStatus(`Detecting ${type === 'building' ? 'buildings' : 'HVACs'}…`, "warn");
-    const detectResp = await fetch('http://localhost:3000/detect', {
+    const detectResp = await fetch('http:/detect', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ path: savedPath, type: type })
