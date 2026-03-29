@@ -18,28 +18,11 @@ const auth = getAuth(app);
 
 // 🔥 Google provider
 const provider = new GoogleAuthProvider();
+
+// 🔥 Optional (keeps account chooser UI)
 provider.setCustomParameters({
   prompt: "select_account"
 });
-
-// 📍 LOCATION FUNCTION (THIS TRIGGERS POPUP)
-function requestLocation() {
-  return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) {
-      reject("Geolocation not supported");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        resolve(position.coords);
-      },
-      (error) => {
-        reject(error);
-      }
-    );
-  });
-}
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -48,35 +31,28 @@ document.addEventListener("DOMContentLoaded", () => {
   loginBtn.onclick = async () => {
     try {
       loginBtn.disabled = true;
-      loginBtn.innerText = "Checking location...";
-
-      // 🔥 STEP 1: ASK LOCATION PERMISSION
-      await requestLocation(); // <-- THIS SHOWS "ALLOW LOCATION" POPUP
-
       loginBtn.innerText = "Signing in...";
 
-      // 🔥 STEP 2: RESET SESSION (clean login)
+      // 🔥 Reset Firebase session (prevents weird auto-login behavior)
       try {
         await signOut(auth);
       } catch (e) {}
 
-      // 🔐 STEP 3: GOOGLE LOGIN
+      // 🔐 Google login
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // ✅ SAVE USER
+      // ✅ Save user
       localStorage.setItem("user", JSON.stringify({
         name: user.displayName,
         email: user.email
       }));
 
-      // 🚀 REDIRECT
+      // 🚀 Redirect
       window.location.href = "/app.html";
 
     } catch (error) {
       console.error("Login error:", error);
-
-      alert("Location access is required to continue");
 
       loginBtn.disabled = false;
       loginBtn.innerText = "Sign in with Google";
