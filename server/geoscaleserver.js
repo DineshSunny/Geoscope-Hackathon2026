@@ -169,10 +169,12 @@ Keep responses concise and friendly.`;
 // ── STATIC FILES ─────────────────────────────────────────
 app.use('/captures', express.static(CAPTURES_DIR));
 
+// ✅ FIXED PATHS (IMPORTANT)
+app.use(express.static(path.join(BASE_DIR, '../public')));
+
 app.get('/', (req, res) => {
-    res.sendFile(path.join(BASE_DIR, 'geoscope.html'));
+    res.sendFile(path.join(BASE_DIR, '../public/index.html'));
 });
-app.use(express.static(BASE_DIR));
 
 // ── RUN ──────────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {

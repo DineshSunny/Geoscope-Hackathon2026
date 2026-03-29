@@ -462,6 +462,14 @@
 </div>
 
 <script>
+
+
+
+// 🔐 AUTH CHECK (ADDED)
+const user = localStorage.getItem("user");
+if (!user) {
+  window.location.href = "/index.html";
+}
 // ── State ──────────────────────────────────────────────────────────────────
 let cancelled  = false;
 let fetching   = false;
@@ -1033,6 +1041,14 @@ if (typeof window.toggleKelly === 'function') {
 if (kellyMessages.children.length === 0) {
     addKellyMessage("Hey! I'm Kelly 👋 I can help you explore locations, find coordinates, or answer questions about what you're viewing on the map.", false);
 }
+
+// 🔓 LOGOUT FUNCTION (ADDED)
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "/index.html";
+}
+
+
 </script>
 </body>
 </html>
