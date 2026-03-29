@@ -3,7 +3,6 @@ import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
-  onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
@@ -20,60 +19,43 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+  // 🔥 REDIRECT IF PAGE REFRESHED
+  if (performance.navigation.type === 1) {
+    window.location.href = "/index.html";
+  }
 
   const loginBtn = document.getElementById("loginBtn");
   const userInfo = document.getElementById("userInfo");
 
+  // 🔥 FORCE LOGOUT ON LOAD
+  try {
+    await signOut(auth);
+  } catch (e) {}
+
   // 🔐 LOGIN
-  if (loginBtn) {
-    loginBtn.onclick = async () => {
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (error) {
-        console.error("Login error:", error);
-      }
-    };
-  }
+  loginBtn.onclick = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-  // 🔄 AUTH STATE LISTENER
-  onAuthStateChanged(auth, (user) => {
+      loginBtn.style.display = "none";
 
-    if (user) {
-      console.log("User logged in:", user.displayName);
-
-      // 🔥 Hide login button
-      if (loginBtn) loginBtn.style.display = "none";
-
-      // Show user UI
       userInfo.innerHTML = `
         <p>Welcome, ${user.displayName}</p>
-        <button id="enterBtn">Enter App 🚀</button>
         <button id="logoutBtn">Logout</button>
       `;
 
-      // Enter App
-      document.getElementById("enterBtn").onclick = () => {
-        window.location.href = "/app.html";
+      // 🔓 LOGOUT → GO TO INDEX PAGE
+      document.getElementById("logoutBtn").onclick = async () => {
+        await signOut(auth);
+        window.location.href = "/index.html";
       };
 
-      // Logout
-      document.getElementById("logoutBtn").onclick = () => {
-        signOut(auth).then(() => {
-          console.log("Logged out");
-          location.reload();
-        });
-      };
-
-    } else {
-      console.log("No user logged in");
-
-      // 🔥 Show login button again
-      if (loginBtn) loginBtn.style.display = "block";
-
-      userInfo.innerHTML = "";
+    } catch (error) {
+      console.error("Login error:", error);
     }
-
-  });
+  };
 
 });

@@ -1,34 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Geoscope</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- 🎥 VIDEO BACKGROUND -->
-  <video autoplay muted loop playsinline id="bg-video">
+  <video autoplay muted loop id="bg-video">
     <source src="videos/globe.mp4" type="video/mp4">
   </video>
 
-  <!-- 🌍 CONTENT -->
   <div class="container">
     <h1 class="title">GEOSCOPE</h1>
     <p class="subtitle">AI HVAC Detection System</p>
 
-    <!-- LOGIN BUTTON -->
-    <button id="loginBtn">Sign in with Google</button>
-
-    <!-- USER INFO -->
-    <div id="userInfo"></div>
+    <button onclick="goToLogin()">Click Here</button>
   </div>
 
-  <!-- 🔐 FIREBASE -->
-  <script type="module" src="./script.js"></script>
+  <script>
+    function goToLogin() {
+      window.location.href = "/login.html";
+    }
+  </script>
 
 </body>
 </html>

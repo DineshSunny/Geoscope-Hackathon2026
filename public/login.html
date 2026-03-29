@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Geoscope</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="Cache-Control" content="no-store" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- 🎥 HACKER VIDEO BACKGROUND -->
+  <video autoplay muted loop playsinline id="bg-video">
+    <source src="videos/hacker.mp4" type="video/mp4">
+  </video>
+
+  <!-- 🌍 LOGIN CONTENT -->
+  <div class="container">
+    <h1 class="title">GEOSCOPE</h1>
+    <p class="subtitle">Secure Access Portal</p>
+
+    <!-- LOGIN BUTTON -->
+    <button id="loginBtn">Sign in with Google</button>
+
+    <!-- USER INFO -->
+    <div id="userInfo"></div>
+  </div>
+
+  <!-- 🔐 FIREBASE SCRIPT -->
+  <script type="module" src="./script.js"></script>
+
+</body>
+</html>
