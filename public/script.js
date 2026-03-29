@@ -19,25 +19,33 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// LOGIN BUTTON
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  try {
-    await signInWithPopup(auth, provider);
-  } catch (error) {
-    console.error("Login error:", error);
-  }
-});
+// 🔥 WAIT FOR PAGE LOAD
+document.addEventListener("DOMContentLoaded", () => {
 
-// AFTER LOGIN
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    document.getElementById("userInfo").innerHTML = `
-      <p>Welcome, ${user.displayName}</p>
-      <button id="enterBtn">Enter App 🚀</button>
-    `;
+  const loginBtn = document.getElementById("loginBtn");
 
-    document.getElementById("enterBtn").onclick = () => {
-      window.location.href = "/app.html";
-    };
+  if (loginBtn) {
+    loginBtn.addEventListener("click", async () => {
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (error) {
+        console.error("Login error:", error);
+      }
+    });
   }
+
+  // AFTER LOGIN
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById("userInfo").innerHTML = `
+        <p>Welcome, ${user.displayName}</p>
+        <button id="enterBtn">Enter App 🚀</button>
+      `;
+
+      document.getElementById("enterBtn").onclick = () => {
+        window.location.href = "/app.html";
+      };
+    }
+  });
+
 });
