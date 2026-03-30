@@ -193,9 +193,8 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(BASE_DIR, '../public/index.html'));
 });
 
-// ── RUN ──────────────────────────────────────────────────
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Using Ollama model: ${OLLAMA_MODEL}`);
-    console.log(`Make sure Ollama is running: ollama serve`);
+    console.log(`🚀 Server running on port ${PORT}`);
 });
