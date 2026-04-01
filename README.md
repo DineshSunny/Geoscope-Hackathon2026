@@ -8,7 +8,4 @@ Test
 https://geoscope-4d307.web.app
 
 
-TEST CASE 
-
-
-SUNNY CHECK
+TDeveloping frontend for bigger and smoother flow of buttons, Smoother mouse scroll.
